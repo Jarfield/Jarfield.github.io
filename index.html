@@ -202,7 +202,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-10-26 23:10:20 / 修改时间：23:23:47" itemprop="dateCreated datePublished" datetime="2025-10-26T23:10:20+08:00">2025-10-26</time>
+              <time title="创建时间：2025-10-26 23:10:20 / 修改时间：23:44:24" itemprop="dateCreated datePublished" datetime="2025-10-26T23:10:20+08:00">2025-10-26</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -268,7 +268,7 @@ STS</strong>三类全新整理任务，并纳入两套公开数据。</p></li>
 <li><p><strong>MAR</strong>：<strong>轻量查询编码器</strong>在线服务以降延迟，<strong>更强文档编码器</strong>离线建库保性能。</p></li>
 <li><p><strong>两阶段优化</strong>：（1）查询编码器对齐；（2）联合微调，直接面向检索目标。</p></li>
 <li><p><strong>结果</strong>：如<code>Figure1</code>所示：</p>
-<p><img src="images/MAR/Figure1.png" alt="image-20251026161810384" style="zoom:33%;" /></p></li>
+<p><img src="/images/MAR/Figure1.png" alt="image-20251026161810384" style="zoom:33%;" /></p></li>
 </ul></li>
 </ol>
 <h2 id="相关工作">2 相关工作</h2>
@@ -365,7 +365,7 @@ class="math inline">(<em>q</em><sub><em>i</em></sub>, <em>s</em><sub><em>i</em
 EXISTING EMBEDDING MODELS</h3>
 <ul>
 <li><p><strong>数据规模（Table 1）</strong>：</p>
-<p><img src="images/MAR/Table1.png" alt="image-20251026170312950" style="zoom: 67%;" /></p></li>
+<p><img src="/images/MAR/Table1.png" alt="image-20251026170312950" style="zoom: 67%;" /></p></li>
 <li><p><strong>关键发现（Table 2）</strong>：</p>
 <ul>
 <li>通用嵌入在 CMedQA 与新任务：<strong>85.15</strong> vs
@@ -376,7 +376,7 @@ p=0.215</strong>（≫0.05）：<strong>新任务非冗余</strong>，能从新�
 <strong>Qwen3-Embedding-8B</strong> 在新任务平均
 <strong>64.52</strong>；但<strong>延迟与算力成本高</strong>，限制真实应用。</li>
 </ul>
-<p><img src="images/MAR/Table2.png" alt="image-20251026170510938" style="zoom:67%;" /></p></li>
+<p><img src="/images/MAR/Table2.png" alt="image-20251026170510938" style="zoom:67%;" /></p></li>
 </ul>
 <h2 id="medical-asymmetric-retriever">4 MEDICAL ASYMMETRIC
 RETRIEVER</h2>
@@ -385,7 +385,7 @@ RETRIEVER</h2>
 Encoder）对全量语料向量化并建库；在线仅用<strong>轻量查询编码器</strong>（Query
 Encoder）编码用户查询进行近似向量检索。</p>
 <figure>
-<img src="images/MAR/Figure2.png" alt="image-20251026221506915" />
+<img src="/images/MAR/Figure2.png" alt="image-20251026221506915" />
 <figcaption aria-hidden="true">image-20251026221506915</figcaption>
 </figure>
 <h3 id="high-quality-data-construction">4.1 HIGH-QUALITY DATA
@@ -401,7 +401,7 @@ hard negative 工作流程常失效：</p>
 </ul></li>
 <li><p><strong>多样性感知三步管线</strong>：</p>
 <figure>
-<img src="images/MAR/Figure3.png" alt="image-20251026221621738" />
+<img src="/images/MAR/Figure3.png" alt="image-20251026221621738" />
 <figcaption aria-hidden="true">image-20251026221621738</figcaption>
 </figure>
 <ol type="1">
@@ -565,7 +565,7 @@ epoch</strong>，与本文提出的<strong>MAR</strong>总exposure量匹配。</
 </ul></li>
 </ol>
 <h3 id="main-results-on-medteb">5.2 MAIN RESULTS ON MEDTEB</h3>
-<p><img src="images/MAR/Table3.png" alt="image-20251026224702910" style="zoom:67%;" /></p>
+<p><img src="/images/MAR/Table3.png" alt="image-20251026224702910" style="zoom:67%;" /></p>
 <ol type="1">
 <li><strong>SOTA</strong>：
 <ul>
@@ -585,7 +585,7 @@ epoch</strong>，与本文提出的<strong>MAR</strong>总exposure量匹配。</
 </ol>
 <hr />
 <h3 id="asymmetric-vs.-symmetric">5.3 ASYMMETRIC vs. SYMMETRIC</h3>
-<p><img src="images/MAR/Table4.png" alt="image-20251026225038268" style="zoom: 67%;" /></p>
+<p><img src="/images/MAR/Table4.png" alt="image-20251026225038268" style="zoom: 67%;" /></p>
 <blockquote>
 <p>非对称方案<strong>逼近</strong>大文档模型的上限（8B 对称 65.63 vs. 8B
 非对称 65.21)，同时远超轻量对称；<strong>放大 Doc
@@ -593,7 +593,7 @@ epoch</strong>，与本文提出的<strong>MAR</strong>总exposure量匹配。</
 </blockquote>
 <h3 id="ablation-study">5.4 ABLATION STUDY</h3>
 <h4 id="training-design">5.4.1 Training Design</h4>
-<p><img src="images/MAR/Table5.png" alt="image-20251026225211692" style="zoom: 67%;" /></p>
+<p><img src="/images/MAR/Table5.png" alt="image-20251026225211692" style="zoom: 67%;" /></p>
 <ol type="1">
 <li><p><strong>独立初始化缺一不可</strong>：去掉 Query init →
 <strong>59.66</strong>；去掉 Doc init → <strong>50.26</strong>；完整模型
@@ -617,7 +617,7 @@ epoch</strong>，与本文提出的<strong>MAR</strong>总exposure量匹配。</
 </blockquote></li>
 </ol>
 <h4 id="query-alignment-data">5.4.2 Query Alignment Data</h4>
-<p><img src="images/MAR/Table6.png" alt="image-20251026225406136" style="zoom:67%;" /></p>
+<p><img src="/images/MAR/Table6.png" alt="image-20251026225406136" style="zoom:67%;" /></p>
 <ol type="1">
 <li><strong>仅做 Stage-I</strong>：用“fine-tuning
 数据”<strong>57.26</strong> &gt; “alignment
@@ -631,7 +631,7 @@ epoch</strong>，与本文提出的<strong>MAR</strong>总exposure量匹配。</
 </blockquote>
 <h4 id="alternatives-to-efficient-retrieval">5.4.3 Alternatives to
 Efficient Retrieval</h4>
-<p><img src="images/MAR/Table7.png" alt="image-20251026225516869" style="zoom:67%;" /></p>
+<p><img src="/images/MAR/Table7.png" alt="image-20251026225516869" style="zoom:67%;" /></p>
 <ol type="1">
 <li><strong>KALE</strong>：<strong>55.05</strong>；<strong>Wang &amp;
 Lyu
