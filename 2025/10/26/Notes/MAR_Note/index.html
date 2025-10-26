@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jarfield.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MAR: MEDICAL ASYMMETRIC RETRIEVER FOR EFFICIENT CHINESE MEDICAL DENSE RETRIEVAL 阅读笔记 金培晟 Jarfield 0 摘要 本文提出中文医学文本嵌入基准 MedTEB，覆盖三类贴近真实场景的任务：检索、重排序与医学同义句相似度（STS）。在构建过程中，我们采用基于多模型的 LLM 标注流程以提升数据质量">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MAR: MEDICAL ASYMMETRIC RETRIEVER FOR EFFICIENT CHINESE MEDICAL DENSE RETRIEVAL 阅读笔记">
+<meta property="og:url" content="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/index.html">
+<meta property="og:site_name" content="Jarfield&#39;s Blog">
+<meta property="og:description" content="MAR: MEDICAL ASYMMETRIC RETRIEVER FOR EFFICIENT CHINESE MEDICAL DENSE RETRIEVAL 阅读笔记 金培晟 Jarfield 0 摘要 本文提出中文医学文本嵌入基准 MedTEB，覆盖三类贴近真实场景的任务：检索、重排序与医学同义句相似度（STS）。在构建过程中，我们采用基于多模型的 LLM 标注流程以提升数据质量">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/images/MAR/Figure1.png">
+<meta property="og:image" content="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/images/MAR/Table1.png">
+<meta property="og:image" content="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/images/MAR/Table2.png">
+<meta property="og:image" content="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/images/MAR/Figure2.png">
+<meta property="og:image" content="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/images/MAR/Figure3.png">
+<meta property="og:image" content="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/images/MAR/Table3.png">
+<meta property="og:image" content="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/images/MAR/Table4.png">
+<meta property="og:image" content="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/images/MAR/Table5.png">
+<meta property="og:image" content="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/images/MAR/Table6.png">
+<meta property="og:image" content="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/images/MAR/Table7.png">
+<meta property="article:published_time" content="2025-10-26T15:10:20.000Z">
+<meta property="article:modified_time" content="2025-10-26T15:23:47.259Z">
+<meta property="article:author" content="JArfield">
+<meta property="article:tag" content="大语言模型">
+<meta property="article:tag" content="知识蒸馏">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/images/MAR/Figure1.png">
+
+<link rel="canonical" href="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>MAR: MEDICAL ASYMMETRIC RETRIEVER FOR EFFICIENT CHINESE MEDICAL DENSE RETRIEVAL 阅读笔记 | Jarfield's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jarfield's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://jarfield.github.io/2025/10/26/Notes/MAR_Note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/MakkaPakka.jpg">
+      <meta itemprop="name" content="JArfield">
+      <meta itemprop="description" content="一些学习笔记分享">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jarfield's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MAR: MEDICAL ASYMMETRIC RETRIEVER FOR EFFICIENT CHINESE MEDICAL DENSE RETRIEVAL 阅读笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-10-26 23:10:20 / 修改时间：23:23:47" itemprop="dateCreated datePublished" datetime="2025-10-26T23:10:20+08:00">2025-10-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">阅读笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1
+id="mar-medical-asymmetric-retriever-for-efficient-chinese-medical-dense-retrieval-阅读笔记">MAR:
+MEDICAL ASYMMETRIC RETRIEVER FOR EFFICIENT CHINESE MEDICAL DENSE
+RETRIEVAL 阅读笔记</h1>
+<p><strong>金培晟</strong> <em>Jarfield</em></p>
+<h2 id="摘要">0 摘要</h2>
+<p>本文提出<strong>中文医学文本嵌入基准
+MedTEB</strong>，覆盖三类贴近真实场景的任务：检索、重排序与医学同义句相似度（STS）。在构建过程中，我们采用<strong>基于多模型的
+LLM 标注流程</strong>以提升数据质量。对强通用嵌入模型在 MedTEB
+上的评测显示，该基准具有<strong>面向领域且更具挑战性</strong>的检索评测价值。基于此，我们提出<strong>医学非对称检索器（MAR）</strong>：将查询与文档编码解耦，在线用<strong>轻量查询编码器</strong>实现低延迟，离线用<strong>更强大的（LLM-based）文档编码器</strong>保证检索质量。为优化这一非对称架构，我们引入<strong>两阶段训练框架</strong>：（1）查询编码器对齐；（2）
+联合微调。实验表明，MAR 在 MedTEB 上取得<strong>SOTA
+性能</strong>，同时其推理速度与<strong>小型 BERT
+类嵌入模型</strong>相当，兼顾<strong>准确率与效率</strong>，适用于真实的中文医学检索场景。代码、数据与模型将公开以促进后续研究。</p>
+<h2 id="引言">1 引言</h2>
+<ol type="1">
+<li><p><strong>背景与动机</strong></p>
+<ul>
+<li><p>向量表征（embedding）是现代 NLP
+的基础，广泛用于检索、重排、分类，并是 RAG 的关键组件。</p></li>
+<li><p>医疗等专门领域中，LLM
+往往缺乏深度专家知识；因此需要<strong>准确且低延迟</strong>地访问医学知识，以提升临床决策支持并减少
+RAG 幻觉：<strong>领域化、低延迟的医学嵌入是刚需</strong>。</p></li>
+</ul></li>
+<li><p><strong>现状与差距</strong></p>
+<ul>
+<li><p>通用嵌入模型进展很快，但<strong>中文医学文本嵌入关注不足</strong>。</p></li>
+<li><p>现有基准如 C-MTEB
+仅含两套中文医学检索数据，且存在<strong>标注噪声与假负例</strong>。</p></li>
+<li><p>当前强力嵌入多为<strong>LLM-based</strong>：性能强但<strong>延迟与算力成本高</strong>，限制实时医疗问答等敏感场景。</p></li>
+</ul></li>
+<li><p><strong>基准贡献（MedTEB）</strong></p>
+<ul>
+<li><p><strong>MedTEB</strong>：包含<strong>检索、重排序、医学同义句
+STS</strong>三类全新整理任务，并纳入两套公开数据。</p></li>
+<li><p>使用<strong>LLM 驱动的标注流程</strong>提升标签质量。</p></li>
+<li><p>评测显示：即便强大的通用嵌入模型在 MedTEB
+上表现也不佳，证明其<strong>难度与领域针对性</strong>。</p></li>
+</ul></li>
+<li><p><strong>方法贡献（MAR 非对称检索器 + 两阶段训练）</strong></p>
+<ul>
+<li><p><strong>MAR</strong>：<strong>轻量查询编码器</strong>在线服务以降延迟，<strong>更强文档编码器</strong>离线建库保性能。</p></li>
+<li><p><strong>两阶段优化</strong>：（1）查询编码器对齐；（2）联合微调，直接面向检索目标。</p></li>
+<li><p><strong>结果</strong>：如<code>Figure1</code>所示：</p>
+<p><img src="images/MAR/Figure1.png" alt="image-20251026161810384" style="zoom:33%;" /></p></li>
+</ul></li>
+</ol>
+<h2 id="相关工作">2 相关工作</h2>
+<ol type="1">
+<li><p><strong>Embedding Models</strong></p>
+<ul>
+<li><p><strong>发展过程</strong>：从无监督对比预训练（如
+Contriever）到大规模指令化/对比预训练（E5、GTE、BGE），通用语义表示显著提升。</p></li>
+<li><p><strong>Decoder-only
+兴起</strong>：Qwen3-Embedding、bge-en-icl、NV-Embed 等在 MTEB 上达
+SOTA，证明仅解码器架构也能产出强嵌入。</p></li>
+<li><p><strong>瓶颈</strong>：多数 LLM-based
+模型<strong>参数量大、延迟高、开销重</strong>，不适合实时医疗检索等<strong>延迟敏感</strong>场景：需要<strong>轻量且有效</strong>的领域嵌入。</p></li>
+</ul></li>
+<li><p><strong>Medical Embedding Benchmarks</strong></p>
+<ul>
+<li><p>MTEB 提供跨语种多任务评测；C-MTEB 纳入多项中文数据集。</p></li>
+<li><p>已有医学相关数据（CmedqaRetrieval、MedicalRetrieval、CMedQA-v1/v2
+等）虽被收录，但<strong>检索</strong>任务存在<strong>标注噪声与假负例</strong>，相对仅<strong>重排序</strong>更可靠。</p></li>
+<li><p>缺少<strong>系统化、可信度高</strong>的中文医学嵌入基准
+：<strong>MedTEB</strong> 即为弥补此缺口。</p></li>
+</ul></li>
+<li><p><strong>Asymmetric Architecture</strong></p>
+<ul>
+<li><strong>两大路线</strong>：
+<ol type="1">
+<li><strong>裁剪+蒸馏</strong>：如
+KALE，从大编码器裁剪层得到<strong>轻量查询塔</strong>，用 <strong>L2/KL
+等对齐损失</strong>蒸馏教师知识；</li>
+<li><strong>异构编码器</strong>：如
+ScalingNote、HotelMatch，<strong>查询/文档用不同架构或模态</strong>，通过对齐学习提升检索效果。</li>
+</ol></li>
+<li><strong>本文不同做法</strong>：
+<ol type="1">
+<li><strong>文档塔用 decoder-only</strong>，天然适配异构对齐；</li>
+<li>提出<strong>两阶段对齐框架</strong>（查询对齐+联合微调），直接面向检索优化；</li>
+<li><strong>不做高维投影</strong>：保持原始低维、检索更高效。</li>
+</ol></li>
+</ul></li>
+</ol>
+<h2 id="medteb">3 MEDTEB</h2>
+<ol type="1">
+<li><p>中文医学嵌入基准稀缺；现有 CmedqaRetrieval、MedicalRetrieval
+多源自<strong>问答配对</strong>，忽略跨样本的潜在相关答案，医学领域“<strong>主题强度</strong>”又放大了<strong>假阴性</strong>风险。</p>
+<blockquote>
+<p>在问答配对式数据中，<strong>假阴性</strong>就是：本应相关的答案被标成负例，模型检索对了却被评测判错。医学场景尤甚——同一疾病/药物常有大量可通用的专业回答，配对之外的有效答案在标注里被遗漏而默认为负。例：查询“莫西沙星能和布洛芬一起吃吗？”标注只认
+A 医生为正，把 B/C
+医生在其他贴里给出的同样正确用药原则都记作负；模型检到 B/C
+仍被判错。</p>
+</blockquote></li>
+<li><p><strong>实验依据</strong>：LLM 预标注显示——MedicalRetrieval
+每条查询平均 <strong>8.6</strong>
+个“被标负但可能相关”的候选；CmedqaRetrieval 约 <strong>19</strong>
+个。</p></li>
+<li><p><strong>MedTEB</strong>：三项<strong>新任务</strong>（Retrieval /
+Reranking / Synonym STS）+
+两个<strong>人工核验</strong>公开数据（CMedQA-v1/-v2-reranking）。</p></li>
+</ol>
+<h3 id="construction-method">3.1 CONSTRUCTION METHOD</h3>
+<ul>
+<li><strong>Retrieval</strong>：
+<ul>
+<li><strong>多检索器召回 + 多 LLM 共识标注</strong>；数据为 <span
+class="math inline"><em>Q</em></span>（真实匿名查询）、<span
+class="math inline"><em>D</em><sup>′</sup> ⊆ <em>D</em></span>（标注后语料）、<span
+class="math inline"><em>R</em> = {(<em>q</em><sub><em>i</em></sub>, <em>d</em><sub><em>j</em></sub>, <em>y</em><sub><em>i</em><em>j</em></sub>)|<em>y</em><sub><em>i</em><em>j</em></sub> ∈ {0, 1}}</span>。</li>
+<li>与 AIR-Bench 做法的区别：<strong>(i) 医疗域</strong>、<strong>(ii)
+真实查询</strong>、<strong>(iii) 多 LLM +
+大候选池</strong>缓解误标负与未标注正。</li>
+</ul></li>
+<li><strong>Rerank</strong>：
+<ul>
+<li>同样用多 LLM 标注，得正集 <span
+class="math inline"><em>P</em><sub><em>i</em></sub></span>、负集 <span
+class="math inline"><em>N</em><sub><em>i</em></sub></span>；构造三元组
+<span
+class="math inline">(<em>q</em><sub><em>i</em></sub>, <em>P</em><sub><em>i</em></sub><sup>list</sup>, <em>N</em><sub><em>i</em></sub><sup>list</sup>)</span>。</li>
+</ul></li>
+<li><strong>STS</strong>：
+<ul>
+<li>先建<strong>医学同义词词表</strong>；对每个 <span
+class="math inline"><em>q</em><sub><em>i</em></sub></span>，GPT-4o
+生成：<span
+class="math inline"><em>s</em><sub><em>i</em></sub><sup>+</sup></span>（同义保义）、<span
+class="math inline"><em>s</em><sub><em>i</em>, 1</sub><sup>−</sup></span>（同义改义）、<span
+class="math inline"><em>s</em><sub><em>i</em>, 2</sub><sup>−</sup></span>（非同义改义）。</li>
+<li>采样<span
+class="math inline"><em>s</em><sub><em>i</em></sub> ∈ {<em>s</em><sub><em>i</em></sub><sup>+</sup>, <em>s</em><sub><em>i</em>, 1</sub><sup>−</sup>, <em>s</em><sub><em>i</em>, 2</sub><sup>−</sup>}</span>配对成
+<span
+class="math inline">(<em>q</em><sub><em>i</em></sub>, <em>s</em><sub><em>i</em></sub>, <em>y</em><sub><em>i</em></sub>)</span>，检验<strong>细粒度同义理解</strong>。</li>
+</ul></li>
+</ul>
+<h3 id="evaluation-of-existing-embedding-models">3.2 EVALUATION OF
+EXISTING EMBEDDING MODELS</h3>
+<ul>
+<li><p><strong>数据规模（Table 1）</strong>：</p>
+<p><img src="images/MAR/Table1.png" alt="image-20251026170312950" style="zoom: 67%;" /></p></li>
+<li><p><strong>关键发现（Table 2）</strong>：</p>
+<ul>
+<li>通用嵌入在 CMedQA 与新任务：<strong>85.15</strong> vs
+<strong>57.85</strong>：新任务更具挑战、医学域欠发达。</li>
+<li><strong>Spearman ρ=0.354,
+p=0.215</strong>（≫0.05）：<strong>新任务非冗余</strong>，能从新视角评估模型。</li>
+<li><strong>decoder-only</strong> 模型，如
+<strong>Qwen3-Embedding-8B</strong> 在新任务平均
+<strong>64.52</strong>；但<strong>延迟与算力成本高</strong>，限制真实应用。</li>
+</ul>
+<p><img src="images/MAR/Table2.png" alt="image-20251026170510938" style="zoom:67%;" /></p></li>
+</ul>
+<h2 id="medical-asymmetric-retriever">4 MEDICAL ASYMMETRIC
+RETRIEVER</h2>
+<p>鉴于现有模型在 MedTEB 上的局限性，作者提出<strong>非对称嵌入架构 +
+两阶段训练</strong>：离线用更强的<strong>文档编码器</strong>（Doc
+Encoder）对全量语料向量化并建库；在线仅用<strong>轻量查询编码器</strong>（Query
+Encoder）编码用户查询进行近似向量检索。</p>
+<figure>
+<img src="images/MAR/Figure2.png" alt="image-20251026221506915" />
+<figcaption aria-hidden="true">image-20251026221506915</figcaption>
+</figure>
+<h3 id="high-quality-data-construction">4.1 HIGH-QUALITY DATA
+CONSTRUCTION</h3>
+<ol type="1">
+<li><p><strong>难点</strong>：医学“主题强度”导致<strong>潜在正样本多</strong>，传统
+hard negative 工作流程常失效：</p>
+<ul>
+<li><p><strong>Top-k
+挖负</strong>易夹带<strong>假阴性</strong>（未标注但相关的文档）；</p></li>
+<li><p><strong>阈值过滤</strong>决策边界模糊；</p></li>
+<li><p>对庞大候选池做<strong>全量 LLM 标注</strong>成本过高。</p></li>
+</ul></li>
+<li><p><strong>多样性感知三步管线</strong>：</p>
+<figure>
+<img src="images/MAR/Figure3.png" alt="image-20251026221621738" />
+<figcaption aria-hidden="true">image-20251026221621738</figcaption>
+</figure>
+<ol type="1">
+<li><strong>清洗与匿名化</strong>：从公开资源汇集中文医学语料 <span
+class="math inline"><em>D</em></span>，并从线上服务收集<strong>真实匿名查询</strong>
+<span
+class="math inline"><em>Q</em></span>；去隐私、正则清洗、格式规范化。</li>
+<li><strong>去重与多样化</strong>：基于<strong>动态向量索引</strong>（先建索引、再以相似度阈值过滤）去语义近重复，并按主题做均衡采样，降低冗余、提升长尾覆盖。</li>
+<li><strong>候选内精标</strong>：对每个 <span
+class="math inline"><em>q</em></span>
+由<strong>多检索器融合</strong>召回 <strong>Top-50</strong> 候选，再用
+<strong>GPT-4o</strong>（多 LLM
+共识）标注<strong>可靠正/负</strong>，最终产出约 <strong>50 万</strong>
+检索三元组 <span
+class="math inline">(<em>q</em>, <em>d</em><sup>+</sup>, <em>d</em><sup>−</sup>)</span>。</li>
+</ol></li>
+<li><p><strong>自对齐数据</strong>（服务于非对称对齐）：</p>
+<ul>
+<li><p><strong>查询侧</strong>：<span
+class="math inline">(<em>q</em>, <em>q</em>, <em>q</em><sup>−</sup>)</span>
+共 <strong>2.8M</strong>；</p></li>
+<li><p><strong>文档侧</strong>：<span
+class="math inline">(<em>d</em>, <em>d</em>, <em>d</em><sup>−</sup>)</span>
+共 <strong>5.6M</strong>；</p></li>
+</ul>
+<blockquote>
+<p>其中正样由“文本与自身”构造，负样采用<strong>批内负</strong>为主。</p>
+</blockquote></li>
+</ol>
+<h3 id="independent-initialization">4.2 INDEPENDENT INITIALIZATION</h3>
+<p>为给两塔注入<strong>领域知识</strong>并提供稳健起点，先训练一个<strong>对称双塔</strong>（Query
+= Doc 结构一致）：</p>
+<ol type="1">
+<li><strong>查询编码器（三级预训练 → 监督微调）</strong>
+<ul>
+<li><strong>RetroMAE
+预训练</strong>：编码器/轻量解码器<strong>异步掩码</strong>；编码器产出句向量，解码器做
+MLM 重构。语料：<strong>6000
+万条</strong>中文<strong>医疗问答</strong>无监督语料。</li>
+<li><strong>无监督 InfoNCE 预训练</strong>：损失为 InfoNCE（温度
+<strong>τ 可学习</strong>）。将<strong>标题–正文</strong>视作正对 <span
+class="math inline">(<em>q</em>, <em>d</em><sup>+</sup>)</span>，同
+batch 其余样本作<strong>批内负</strong>。</li>
+<li><strong>有监督 InfoNCE 微调</strong>：在 §4 构建的高质量数据 +
+<strong>MedTEB 训练划分</strong>（Retrieval、Rerank、<strong>CMedQA
+v1/v2</strong>、<strong>Synonym STS</strong>）上，用 InfoNCE
+端到端优化检索表征。</li>
+</ul></li>
+<li><strong>文档编码器（大模型微调 + 多维嵌入）</strong>
+<ul>
+<li><strong>LoRA 微调</strong>：以 <strong>Qwen3-4B / Qwen3-8B</strong>
+为底座，<strong>rank=32，α=64</strong>，在控制算力的同时保持性能。</li>
+<li><strong>MRL（Matryoshka Representation
+Learning）</strong>：训练<strong>嵌套维度集合 <span
+class="math inline"><em>M</em></span></strong>，在每个目标维度上各自计算
+InfoNCE，并<strong>对所有维度的损失求平均</strong>。推理时可<strong>截断到前
+m
+维</strong>以匹配轻量查询塔的向量维度，兼顾<strong>精度/延迟/索引大小</strong>的部署弹性。</li>
+</ul></li>
+</ol>
+<blockquote>
+<p>初始化后得到一个<strong>性能稳健的对称表示空间</strong>，为后续的<strong>非对称对齐（Stage
+I）</strong>与<strong>联合微调（Stage II）</strong>打下基础。</p>
+</blockquote>
+<h3 id="asymmetric-embedding-architecture">4.3 ASYMMETRIC EMBEDDING
+ARCHITECTURE</h3>
+<ol type="1">
+<li><strong>范式</strong>：</li>
+</ol>
+<ul>
+<li><p><strong>离线</strong>：Doc Encoder
+对全集语料向量化，构建<strong>向量索引</strong>（可用余弦/内积）；</p></li>
+<li><p><strong>在线</strong>：Query Encoder 编码用户查询，进行 ANN
+检索（HNSW/FAISS 等实现可替换）。</p></li>
+</ul>
+<ol start="2" type="1">
+<li><strong>难点</strong>：轻量查询塔与强力文档塔<strong>嵌入空间天然不对齐</strong>。</li>
+</ol>
+<h4 id="asymmetric-stage-i-query-encoder-alignment">4.3.1 ASYMMETRIC
+STAGE I: QUERY ENCODER ALIGNMENT</h4>
+<ol type="1">
+<li><p><strong>做法</strong>：冻结 Doc
+Encoder（<strong>教师</strong>），仅更新 Query
+Encoder（<strong>学生</strong>）。训练数据采用上节的<strong>自对齐集合</strong>与检索候选池中的正/负。</p></li>
+<li><p><strong>目标函数（混合对齐）</strong>：</p>
+<ol type="1">
+<li><strong>Asym-InfoNCE（相对排序对齐）</strong></li>
+</ol>
+<p><span class="math display">$$
+\mathcal{L}_{\text{Asym}} \!=\! -\log \frac{\exp(s^+/
+\tau)}{\exp(s^+/\tau) + \sum_{i=1}^{N}\exp(s_i^-/\tau)}\,,
+$$</span></p>
+<blockquote>
+<p>其中 <span
+class="math inline"><em>s</em><sup>+</sup> = sim(<em>E</em><sub><em>Q</em></sub>(<em>q</em>), <em>E</em><sub><em>D</em></sub>(<em>d</em><sup>+</sup>))</span>,
+<span
+class="math inline"><em>s</em><sub><em>i</em></sub><sup>−</sup> = sim(<em>E</em><sub><em>Q</em></sub>(<em>q</em>), <em>E</em><sub><em>D</em></sub>(<em>d</em><sub><em>i</em></sub><sup>−</sup>))</span>，<span
+class="math inline">sim</span>
+为<strong>余弦相似</strong>（向量已归一化）， <span
+class="math inline"><em>τ</em></span> 为温度，<span
+class="math inline"><em>N</em></span>
+为负样数量（批内负为主）。在自对齐样本上，<span
+class="math inline"><em>q</em></span> 与 <span
+class="math inline"><em>d</em><sup>+</sup></span>
+为<strong>同一文本</strong>，可稳定拉近两塔同源表示。</p>
+</blockquote>
+<ol start="2" type="1">
+<li><strong>MSE（绝对位置对齐）</strong></li>
+</ol>
+<p><span
+class="math display">ℒ<sub>MSE</sub> = ∥ <em>E</em><sub><em>Q</em></sub>(text) − <em>E</em><sub><em>D</em></sub>(text) ∥<sub>2</sub><sup>2</sup>,</span></p>
+<blockquote>
+<p>直接惩罚同一文本在两塔中的向量距离，补充“坐标级”的对齐约束。</p>
+</blockquote>
+<ol start="3" type="1">
+<li><strong>联合损失</strong></li>
+</ol>
+<p><span class="math display">ℒ<sub>Stage
+I</sub> = <em>λ</em><sub>1</sub>ℒ<sub>Asym</sub> + <em>λ</em><sub>2</sub>ℒ<sub>MSE</sub>,  <em>λ</em><sub>1</sub> = <em>λ</em><sub>2</sub> = 1.</span></p></li>
+<li><p><strong>直觉</strong>：Asym-InfoNCE
+提供<strong>相对排序</strong>信号，MSE
+提供<strong>绝对位置</strong>信号；两者协同可更稳地缩小两塔语义鸿沟，避免仅有排序信号时的漂移。</p></li>
+</ol>
+<h3 id="asymmetric-stage-ii-joint-fine-tuning">4.4 ASYMMETRIC STAGE II:
+JOINT FINE-TUNING</h3>
+<ol type="1">
+<li><strong>目标</strong>：在初步对齐的基础上，<strong>端到端</strong>提升检索判别力。</li>
+<li><strong>做法</strong>：解冻两塔，仅以 <strong>Asym-InfoNCE</strong>
+为训练目标；结合<strong>批内负 + 硬负</strong>丰富难例。</li>
+<li><strong>结果</strong>：最终得到 <strong>MAR</strong>（Medical
+Asymmetric Retriever）系列模型——在 MedTEB
+上取得强精度，同时<strong>在线仅跑轻量查询塔</strong>、<strong>离线预计算文档塔</strong>，实现<strong>SOTA
+级准确率 × 小模型级 QPS/延迟</strong>的现实可用折中。</li>
+</ol>
+<h2 id="实验">5 实验</h2>
+<h3 id="setup">5.1 SETUP</h3>
+<ol type="1">
+<li><strong>Models</strong>
+<ul>
+<li><strong>Query</strong>：<em>Medical-Embedder-base</em>（由
+<strong>gte-multilingual-mlm-base</strong> 初始化，≈0.3B 参数）。</li>
+<li><strong>Document</strong>：<em>Medical-Embedder-4B / -8B</em>（在
+<strong>Qwen3-4B / Qwen3-8B</strong> 上微调）。</li>
+<li><strong>Asymmetric 变体</strong>：<strong>MAR-0.3B-4B</strong>（0.3B
+Query + 4B Doc）、<strong>MAR-0.3B-8B</strong>（0.3B Query + 8B
+Doc）。</li>
+<li><strong>Baselines</strong>：BGE、GTE、Qwen3-Embedding、Conan-embedding-v1、stella-base-zh-v3-1792d
+等。</li>
+</ul></li>
+<li><strong>Training Data（统一）</strong> 第4节的高质量微调集 +
+<strong>MedTEB 训练划分</strong>（Retrieval / Rerank / CMedQA / Synonym
+STS）。即便部分baseline在预训练阶段见过
+CMedQA，仍<strong>显式纳入</strong>以避免该任务潜在性能下降。</li>
+<li><strong>Implementation</strong>
+<ul>
+<li><strong>检索评估</strong>：用 <strong>FAISS</strong> 近邻检索。</li>
+<li><strong>总exposure量对齐</strong>：所有对称基线 <strong>fine-tune 2
+个
+epoch</strong>，与本文提出的<strong>MAR</strong>总exposure量匹配。</li>
+<li>计算资源：<strong>32× A100-40GB</strong>。</li>
+</ul></li>
+</ol>
+<h3 id="main-results-on-medteb">5.2 MAIN RESULTS ON MEDTEB</h3>
+<p><img src="images/MAR/Table3.png" alt="image-20251026224702910" style="zoom:67%;" /></p>
+<ol type="1">
+<li><strong>SOTA</strong>：
+<ul>
+<li><strong>MAR-0.3B-4B</strong> 平均
+<strong>78.13</strong>，<strong>MAR-0.3B-8B</strong> 平均
+<strong>78.94</strong>；均<strong>超过</strong>最强基线
+<strong>gte-Qwen2-1.5B-instruct </strong>=
+<strong>77.61</strong>（decoder-only），且<strong>Query 仅
+0.3B</strong>。</li>
+</ul></li>
+<li><strong>扩展性</strong>：
+<ul>
+<li>将文档塔 <strong>4B → 8B</strong>，平均提升
+<strong>+0.81</strong>；<strong>查询时延不变</strong>（Query 仍
+0.3B）。</li>
+</ul></li>
+</ol>
+<hr />
+<h3 id="asymmetric-vs.-symmetric">5.3 ASYMMETRIC vs. SYMMETRIC</h3>
+<p><img src="images/MAR/Table4.png" alt="image-20251026225038268" style="zoom: 67%;" /></p>
+<blockquote>
+<p>非对称方案<strong>逼近</strong>大文档模型的上限（8B 对称 65.63 vs. 8B
+非对称 65.21)，同时远超轻量对称；<strong>放大 Doc
+塔</strong>能<strong>单向提升</strong>精度，且<strong>不增加查询时延</strong>。</p>
+</blockquote>
+<h3 id="ablation-study">5.4 ABLATION STUDY</h3>
+<h4 id="training-design">5.4.1 Training Design</h4>
+<p><img src="images/MAR/Table5.png" alt="image-20251026225211692" style="zoom: 67%;" /></p>
+<ol type="1">
+<li><p><strong>独立初始化缺一不可</strong>：去掉 Query init →
+<strong>59.66</strong>；去掉 Doc init → <strong>50.26</strong>；完整模型
+<strong>64.38</strong>。</p>
+<blockquote>
+<p>先训<strong>对称双塔</strong>为非对称阶段提供<strong>更强起点</strong>至关重要。</p>
+</blockquote></li>
+<li><p><strong>两阶段都重要</strong>：无 Query 对齐 →
+<strong>51.07</strong>；无联合微调 → <strong>55.49</strong>；完整
+<strong>64.38</strong>。</p>
+<blockquote>
+<p><strong>对齐阶段</strong>让学生 Query 学到教师 Doc
+的空间，<strong>联合微调</strong>让两塔适配下游检索。</p>
+</blockquote></li>
+<li><p><strong>损失设计（Stage I）</strong>：去 <strong>MSE</strong> →
+<strong>63.57</strong>；去<strong>对比项</strong> →
+<strong>64.03</strong>；两者并用 <strong>64.38（最佳）</strong>。</p>
+<blockquote>
+<p><strong>相对排序（Asym-InfoNCE）+
+绝对位置（MSE）</strong>均有贡献。</p>
+</blockquote></li>
+</ol>
+<h4 id="query-alignment-data">5.4.2 Query Alignment Data</h4>
+<p><img src="images/MAR/Table6.png" alt="image-20251026225406136" style="zoom:67%;" /></p>
+<ol type="1">
+<li><strong>仅做 Stage-I</strong>：用“fine-tuning
+数据”<strong>57.26</strong> &gt; “alignment
+数据”<strong>55.49</strong>。</li>
+<li><strong>再接 Stage-II</strong>：先用 alignment 数据的最终表现
+<strong>64.38</strong> &gt; 先用 fine-tuning 数据
+<strong>60.49</strong>。</li>
+</ol>
+<blockquote>
+<p><strong>对齐专用数据</strong>更能<strong>铺好表示空间</strong>、<strong>抬高性能上限</strong>；直接用下游数据做对齐易<strong>过早收敛</strong>、表达不佳。</p>
+</blockquote>
+<h4 id="alternatives-to-efficient-retrieval">5.4.3 Alternatives to
+Efficient Retrieval</h4>
+<p><img src="images/MAR/Table7.png" alt="image-20251026225516869" style="zoom:67%;" /></p>
+<ol type="1">
+<li><strong>KALE</strong>：<strong>55.05</strong>；<strong>Wang &amp;
+Lyu
+(2023)</strong>：<strong>53.13</strong>；<strong>ScalingNote</strong>：<strong>49.49</strong>（均为非对称）。</li>
+<li><strong>Distill-from-4B（对称蒸馏学生）</strong>：<strong>62.72</strong>。</li>
+<li><strong>MAR-0.3B-4B</strong>：<strong>64.38（最佳）</strong>。</li>
+</ol>
+<blockquote>
+<p>编码器裁剪/分数蒸馏在<strong>decoder-only</strong>场景下适配有限；<strong>直接把强
+Doc
+作为教师并保留其离线向量</strong>，可避免蒸馏信息损失，检索效果更强。</p>
+</blockquote>
+<h2 id="结论">6 结论</h2>
+<p>本文发布中文医学嵌入新基准
+<strong>MedTEB</strong>，并提出面向<strong>低延迟医疗检索</strong>的非对称模型
+<strong>MAR</strong>（轻量查询侧 + 大规模文档侧，二阶段对齐/微调）。在
+MedTEB 上取得
+<strong>SOTA</strong>，并开源<strong>基准、模型与训练流程</strong>，为真实医疗
+RAG 落地与领域嵌入研究提供实践方案与起点。</p>
+<h2 id="我的思考">我的思考</h2>
+<p>读完这篇论文，我学习到了一条可落地的路线：<strong>把“强能力”放在离线的文档塔，把“低时延”放在在线的查询塔</strong>。这种非对称设计天然适配需要实时响应的检索/RAG；迁移到多模态时，也只需把文档塔换成强
+VLM/MLLM，查询侧保留轻量编码头即可。</p>
+<p>同时，本文的<strong>训练策略</strong>也很关键：先做一次<strong>对称初始化</strong>给两塔注入领域知识；随后
+<strong>Stage-I</strong> 冻结文档塔，只训查询塔，用
+<strong>Asym-InfoNCE（相对排序）+
+MSE（绝对位置）</strong>把两塔空间拉齐；最后 <strong>Stage-II</strong>
+解冻两塔，仅用 Asym-InfoNCE
+面向检索目标端到端优化。这里的一个小技巧值得照搬——<strong>对齐专用数据</strong>：<span
+class="math inline">(<em>q</em>, <em>q</em>, <em>q</em><sup>−</sup>)</span>/<span
+class="math inline">(<em>d</em>, <em>d</em>, <em>d</em><sup>−</sup>)</span>
+先把“同一文本”在两塔里对齐到同一位置，再去学正负间隔；而文档塔用
+<strong>LoRA</strong> 降算力、配合 <strong>MRL</strong>
+训练多维嵌套表示，后续就能在不改查询塔的前提下，<strong>只放大文档塔</strong>来换取精度，查询时延几乎不变。</p>
+<p>数据层面，我明白高质量数据的价值，通过<strong>在 Top-K
+候选里精做数据</strong>——多检索器召回→多 LLM
+一致性复核→必要时允许<strong>多正样</strong>
+的做法，专门对付医学场景里“主题强度高导致假阴性多”的难点。做多模态时，同样可以考虑把一致性扩展成
+<strong>VLM+LLM</strong> 双通道。</p>
+<p>最后是<strong>如何从实验结果中分析</strong>：一方面，针对<strong>精度&amp;效率双线</strong>（nDCG@10/Recall@k
++
+QPS/显存/延迟），探究“文档塔变大、查询时延不变”的收益；另一方面，通过<strong>轻量诊断</strong>——假阴性（每查询的可疑负例数+抽检通过率）、错误切片（实体/同义/否定等维度），以及对齐前后<strong>余弦相似度</strong>确认空间收敛。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" rel="tag"># 大语言模型</a>
+              <a href="/tags/%E7%9F%A5%E8%AF%86%E8%92%B8%E9%A6%8F/" rel="tag"># 知识蒸馏</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/10/08/Notes/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%951/" rel="prev" title="大语言模型（阅读笔记1）">
+      <i class="fa fa-chevron-left"></i> 大语言模型（阅读笔记1）
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#mar-medical-asymmetric-retriever-for-efficient-chinese-medical-dense-retrieval-%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">MAR:
+MEDICAL ASYMMETRIC RETRIEVER FOR EFFICIENT CHINESE MEDICAL DENSE
+RETRIEVAL 阅读笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.1.</span> <span class="nav-text">0 摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.2.</span> <span class="nav-text">1 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.3.</span> <span class="nav-text">2 相关工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#medteb"><span class="nav-number">1.4.</span> <span class="nav-text">3 MEDTEB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#construction-method"><span class="nav-number">1.4.1.</span> <span class="nav-text">3.1 CONSTRUCTION METHOD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#evaluation-of-existing-embedding-models"><span class="nav-number">1.4.2.</span> <span class="nav-text">3.2 EVALUATION OF
+EXISTING EMBEDDING MODELS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#medical-asymmetric-retriever"><span class="nav-number">1.5.</span> <span class="nav-text">4 MEDICAL ASYMMETRIC
+RETRIEVER</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#high-quality-data-construction"><span class="nav-number">1.5.1.</span> <span class="nav-text">4.1 HIGH-QUALITY DATA
+CONSTRUCTION</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#independent-initialization"><span class="nav-number">1.5.2.</span> <span class="nav-text">4.2 INDEPENDENT INITIALIZATION</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#asymmetric-embedding-architecture"><span class="nav-number">1.5.3.</span> <span class="nav-text">4.3 ASYMMETRIC EMBEDDING
+ARCHITECTURE</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#asymmetric-stage-i-query-encoder-alignment"><span class="nav-number">1.5.3.1.</span> <span class="nav-text">4.3.1 ASYMMETRIC
+STAGE I: QUERY ENCODER ALIGNMENT</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#asymmetric-stage-ii-joint-fine-tuning"><span class="nav-number">1.5.4.</span> <span class="nav-text">4.4 ASYMMETRIC STAGE II:
+JOINT FINE-TUNING</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">1.6.</span> <span class="nav-text">5 实验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#setup"><span class="nav-number">1.6.1.</span> <span class="nav-text">5.1 SETUP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#main-results-on-medteb"><span class="nav-number">1.6.2.</span> <span class="nav-text">5.2 MAIN RESULTS ON MEDTEB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#asymmetric-vs.-symmetric"><span class="nav-number">1.6.3.</span> <span class="nav-text">5.3 ASYMMETRIC vs. SYMMETRIC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ablation-study"><span class="nav-number">1.6.4.</span> <span class="nav-text">5.4 ABLATION STUDY</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#training-design"><span class="nav-number">1.6.4.1.</span> <span class="nav-text">5.4.1 Training Design</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#query-alignment-data"><span class="nav-number">1.6.4.2.</span> <span class="nav-text">5.4.2 Query Alignment Data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#alternatives-to-efficient-retrieval"><span class="nav-number">1.6.4.3.</span> <span class="nav-text">5.4.3 Alternatives to
+Efficient Retrieval</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">1.7.</span> <span class="nav-text">6 结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E7%9A%84%E6%80%9D%E8%80%83"><span class="nav-number">1.8.</span> <span class="nav-text">我的思考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="JArfield"
+      src="/uploads/MakkaPakka.jpg">
+  <p class="site-author-name" itemprop="name">JArfield</p>
+  <div class="site-description" itemprop="description">一些学习笔记分享</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Jarfield" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Jarfield" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JArfield</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
