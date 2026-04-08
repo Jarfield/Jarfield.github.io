@@ -1,0 +1,116 @@
+diff --git a/node_modules/hexo-theme-icarus/layout/common/article.jsx b/node_modules/hexo-theme-icarus/layout/common/article.jsx
+index c47ec25..739d8f4 100644
+--- a/node_modules/hexo-theme-icarus/layout/common/article.jsx
++++ b/node_modules/hexo-theme-icarus/layout/common/article.jsx
+@@ -91,7 +91,7 @@ module.exports = class extends Component {
+                     {/* Content/Excerpt */}
+                     <div class="content" dangerouslySetInnerHTML={{ __html: index && page.excerpt ? page.excerpt : page.content }}></div>
+                     {/* Licensing block */}
+-                    {!index && article && article.licenses && Object.keys(article.licenses)
++                    {!index && page.layout !== 'page' && article && article.licenses && Object.keys(article.licenses)
+                         ? <ArticleLicensing.Cacheable page={page} config={config} helper={helper} /> : null}
+                     {/* Tags */}
+                     {!index && page.tags && page.tags.length ? <div class="article-tags is-size-7 mb-4">
+@@ -103,7 +103,7 @@ module.exports = class extends Component {
+                     {/* "Read more" button */}
+                     {index && page.excerpt ? <a class="article-more button is-small is-size-7" href={`${url_for(page.link || page.path)}#more`}>{__('article.more')}</a> : null}
+                     {/* Share button */}
+-                    {!index ? <Share config={config} page={page} helper={helper} /> : null}
++                    {!index && page.layout !== 'page' ? <Share config={config} page={page} helper={helper} /> : null}
+                 </article>
+             </div>
+             {/* Donate button */}
+diff --git a/node_modules/hexo-theme-icarus/layout/common/head.jsx b/node_modules/hexo-theme-icarus/layout/common/head.jsx
+index 6285476..93e175b 100644
+--- a/node_modules/hexo-theme-icarus/layout/common/head.jsx
++++ b/node_modules/hexo-theme-icarus/layout/common/head.jsx
+@@ -46,8 +46,10 @@ module.exports = class extends Component {
+             structured_data = {},
+             canonical_url = page.permalink,
+             rss,
+-            favicon
++            favicon,
++            custom_css = []
+         } = head;
++        const customCss = Array.isArray(custom_css) ? custom_css : [custom_css].filter(Boolean);
+ 
+         const noIndex = helper.is_archive() || helper.is_category() || helper.is_tag();
+ 
+@@ -169,6 +171,7 @@ module.exports = class extends Component {
+             {hlTheme ? <link data-pjax rel="stylesheet" href={cdn('highlight.js', '11.7.0', 'styles/' + hlTheme + '.css')} /> : null}
+             <link rel="stylesheet" href={fontCssUrl[variant]} />
+             <link data-pjax rel="stylesheet" href={url_for('/css/' + variant + '.css')} />
++            {customCss.map(css => <link data-pjax rel="stylesheet" href={url_for(css)} />)}
+             <Plugins site={site} config={config} helper={helper} page={page} head={true} />
+ 
+             {adsenseClientId ? <script data-ad-client={adsenseClientId}
+diff --git a/node_modules/hexo-theme-icarus/layout/index.jsx b/node_modules/hexo-theme-icarus/layout/index.jsx
+index 7fe8419..7e28768 100644
+--- a/node_modules/hexo-theme-icarus/layout/index.jsx
++++ b/node_modules/hexo-theme-icarus/layout/index.jsx
+@@ -8,6 +8,17 @@ module.exports = class extends Component {
+         const { __, url_for } = helper;
+ 
+         return <Fragment>
++            {page.current === 1 ? <div class="card notes-hub-intro">
++                <div class="card-content">
++                    <p class="notes-hub-intro__eyebrow">Notes Stream</p>
++                    <h1 class="title is-4 mb-3">Research notes, paper readings, and incremental updates</h1>
++                    <p class="mb-4">This page keeps the chronological stream, while the homepage and topic pages organize the knowledge base by structure rather than time.</p>
++                    <div class="buttons">
++                        <a class="button is-primary is-rounded" href={url_for('/overview/')}>Go to Overview</a>
++                        <a class="button is-light is-rounded" href={url_for('/resources/')}>Open Resources</a>
++                    </div>
++                </div>
++            </div> : null}
+             {page.posts.map(post => <Article config={config} page={post} helper={helper} index={true} />)}
+             {page.total > 1 ? <Paginator
+                 current={page.current}
+diff --git a/node_modules/hexo-theme-icarus/layout/widget/profile.jsx b/node_modules/hexo-theme-icarus/layout/widget/profile.jsx
+index 55a897b..5d6c23d 100644
+--- a/node_modules/hexo-theme-icarus/layout/widget/profile.jsx
++++ b/node_modules/hexo-theme-icarus/layout/widget/profile.jsx
+@@ -26,6 +26,7 @@ class Profile extends Component {
+             location,
+             counter,
+             followLink,
++            followExternal,
+             followTitle,
+             socialLinks
+         } = this.props;
+@@ -73,7 +74,7 @@ class Profile extends Component {
+                     </div>
+                 </nav>
+                 {followLink ? <div class="level">
+-                    <a class="level-item button is-primary is-rounded" href={followLink} target="_blank" rel="me noopener">{followTitle}</a>
++                    <a class="level-item button is-primary is-rounded" href={followLink} target={followExternal ? '_blank' : null} rel={followExternal ? 'me noopener' : null}>{followTitle}</a>
+                 </div> : null}
+                 {socialLinks ? this.renderSocialLinks(socialLinks) : null}
+             </div>
+@@ -91,6 +92,7 @@ Profile.Cacheable = cacheComponent(Profile, 'widget.profile', props => {
+         author_title,
+         location,
+         follow_link,
++        follow_text,
+         social_links
+     } = widget;
+     const { url_for, _p, __ } = helper;
+@@ -134,7 +136,7 @@ Profile.Cacheable = cacheComponent(Profile, 'widget.profile', props => {
+             post: {
+                 count: postCount,
+                 title: _p('common.post', postCount),
+-                url: url_for('/archives/')
++                url: url_for('/notes/')
+             },
+             category: {
+                 count: categoryCount,
+@@ -148,7 +150,8 @@ Profile.Cacheable = cacheComponent(Profile, 'widget.profile', props => {
+             }
+         },
+         followLink: follow_link ? url_for(follow_link) : undefined,
+-        followTitle: __('widget.follow'),
++        followExternal: typeof follow_link === 'string' && /^https?:\/\//.test(follow_link),
++        followTitle: follow_text || __('widget.follow'),
+         socialLinks
+     };
+ });
