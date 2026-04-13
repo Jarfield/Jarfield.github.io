@@ -384,87 +384,8 @@ python train.py --config configs/train.yaml
 
 这样中途断开 SSH 也不影响。
 
-## 9. 如何把更新同步到你这个网站
-
-你现在这个仓库已经改成了：
-
-- 本地写 Hexo 源码
-- 推送到 GitHub
-- GitHub Actions 自动构建并发布到 Pages
-
-因此，更新一篇文章的流程是：
-
-### 9.1 本地预览
-
-```bash
-npm run server
-```
-
-浏览器打开本地地址，确认文章内容和格式没问题。
-
-### 9.2 本地构建检查
-
-```bash
-npm run build
-```
-
-确保 Hexo 能正常生成静态文件。
-
-### 9.3 提交并推送
-
-```bash
-git add .
-git commit -m "Add shell commands note"
-git push
-```
-
-### 9.4 GitHub 自动发布
-
-推送之后，GitHub 仓库里的 Actions 会自动运行。  
-工作流成功后，网站就会更新到：
-
-```text
-https://Jarfield.github.io/
-```
-
-## 10. 最后给自己留一份最小速查表
-
-```bash
-# 文件
-pwd
-ls -lah
-mkdir -p dir/subdir
-cp -r src dst
-mv old new
-rm -ri target
-
-# 查找
-find . -name "*.py"
-rg "keyword"
-tail -f train.log
-
-# 压缩
-tar -czvf archive.tar.gz data/
-tar -xzvf archive.tar.gz
-
-# 后台运行
-nohup python train.py > train.log 2>&1 &
-screen -S train
-screen -ls
-screen -r train
-
-# 进程
-ps -ef | grep python
-pgrep -af train.py
-kill PID
-pkill -f train.py
-
-# 网站同步
-npm run build
-git add .
-git commit -m "update post"
-git push
-```
+网站更新与发布流程我已经单独拆成了一篇置顶文章：  
+[网站更新与发布流程](/2026/04/13/Notes/site-update-workflow/)
 
 这篇文章的重点不是“命令越多越好”，而是把真正高频、容易忘、容易出错的那一批先固定下来。  
 等后面用得更多，再补 Docker、SSH、rsync、conda 和系统监控也不迟。
