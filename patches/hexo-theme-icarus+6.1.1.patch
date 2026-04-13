@@ -1,8 +1,19 @@
 diff --git a/node_modules/hexo-theme-icarus/layout/common/article.jsx b/node_modules/hexo-theme-icarus/layout/common/article.jsx
-index c47ec25..739d8f4 100644
+index c47ec25..4d2431d 100644
 --- a/node_modules/hexo-theme-icarus/layout/common/article.jsx
 +++ b/node_modules/hexo-theme-icarus/layout/common/article.jsx
-@@ -91,7 +91,7 @@ module.exports = class extends Component {
+@@ -48,6 +48,10 @@ module.exports = class extends Component {
+                     {/* Metadata */}
+                     {page.layout !== 'page' ? <div class="article-meta is-size-7 is-uppercase level is-mobile">
+                         <div class="level-left">
++                            {index && page.sticky ? <span class="level-item article-sticky">
++                                <i class="fas fa-thumbtack mr-1"></i>
++                                <span>置顶</span>
++                            </span> : null}
+                             {/* Creation Date */}
+                             {page.date && <span class="level-item" dangerouslySetInnerHTML={{
+                                 __html: _p('article.created_at', `<time dateTime="${date_xml(page.date)}" title="${new Date(page.date).toLocaleString()}">${date(page.date)}</time>`)
+@@ -91,7 +95,7 @@ module.exports = class extends Component {
                      {/* Content/Excerpt */}
                      <div class="content" dangerouslySetInnerHTML={{ __html: index && page.excerpt ? page.excerpt : page.content }}></div>
                      {/* Licensing block */}
@@ -11,7 +22,7 @@ index c47ec25..739d8f4 100644
                          ? <ArticleLicensing.Cacheable page={page} config={config} helper={helper} /> : null}
                      {/* Tags */}
                      {!index && page.tags && page.tags.length ? <div class="article-tags is-size-7 mb-4">
-@@ -103,7 +103,7 @@ module.exports = class extends Component {
+@@ -103,7 +107,7 @@ module.exports = class extends Component {
                      {/* "Read more" button */}
                      {index && page.excerpt ? <a class="article-more button is-small is-size-7" href={`${url_for(page.link || page.path)}#more`}>{__('article.more')}</a> : null}
                      {/* Share button */}

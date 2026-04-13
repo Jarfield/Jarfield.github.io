@@ -33,17 +33,19 @@ index 91de8e1..82cf45a 100644
    };
  });
 diff --git a/node_modules/hexo-component-inferno/lib/view/widget/recent_posts.js b/node_modules/hexo-component-inferno/lib/view/widget/recent_posts.js
-index a0c5808..c664717 100644
+index a0c5808..e338e62 100644
 --- a/node_modules/hexo-component-inferno/lib/view/widget/recent_posts.js
 +++ b/node_modules/hexo-component-inferno/lib/view/widget/recent_posts.js
-@@ -99,7 +99,9 @@ RecentPosts.Cacheable = cacheComponent(RecentPosts, 'widget.recentposts', functi
+@@ -99,7 +99,11 @@ RecentPosts.Cacheable = cacheComponent(RecentPosts, 'widget.recentposts', functi
    if (!site.posts.length) {
      return null;
    }
 -  var posts = site.posts.sort('date', -1).limit(limit).map(function (post) {
-+  var posts = site.posts.sort('date', -1).filter(function (post) {
++  var posts = site.posts.filter(function (post) {
 +    return post.title && post.title.trim() !== '';
-+  }).limit(limit).map(function (post) {
++  }).toArray().sort(function (a, b) {
++    return (b.sticky || 0) - (a.sticky || 0) || b.date.valueOf() - a.date.valueOf();
++  }).slice(0, limit).map(function (post) {
      return {
        url: url_for(post.link || post.path),
        title: post.title,

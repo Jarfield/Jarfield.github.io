@@ -2,6 +2,7 @@
 title: Shell 常用命令整理
 cover: /images/Covers/sky.jpg
 date: 2026-04-13 12:00:00
+sticky: 10
 tags:
   - Shell
   - Linux

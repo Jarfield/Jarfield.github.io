@@ -190,6 +190,11 @@ body.is-3-column .column-right {
   color: var(--hub-text);
 }
 
+.article-meta .article-sticky {
+  color: var(--hub-primary);
+  font-weight: 700;
+}
+
 .article .content p,
 .article .content li {
   color: var(--hub-muted);
