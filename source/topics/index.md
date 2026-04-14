@@ -24,18 +24,34 @@ description: 研究专题入口
   </a>
 </div>
 
-## 这一版为什么只先做三个专题
+<details class="hub-accordion">
+  <summary>
+    <strong>这一版为什么只先做三个专题</strong>
+    <span class="hub-accordion__meta">当前范围说明</span>
+  </summary>
+  <div class="hub-accordion__body">
+    <ul class="hub-accordion__list">
+      <li>它们覆盖了通用表示、检索场景和部署约束三个方向。</li>
+      <li>与你当前已有的笔记内容存在交集，能先做成可用版本。</li>
+      <li>后续可自然扩展到 Multilingual、Long Context、Evaluation & Benchmarks 等页面。</li>
+    </ul>
+  </div>
+</details>
 
-- 它们覆盖了通用表示、检索场景和部署约束三个方向。
-- 与你当前已有的笔记内容存在交集，能先做成可用版本。
-- 后续可自然扩展到 Multilingual、Long Context、Evaluation & Benchmarks 等页面。
-
-## 后续准备扩展的专题
-
-- Multilingual Embedding
-- Long-context / Contextual Embedding
-- Training Paradigms
-- Evaluation & Benchmarks
-- Domain-specific Embedding
+<details class="hub-accordion">
+  <summary>
+    <strong>后续准备扩展的专题</strong>
+    <span class="hub-accordion__meta">Roadmap</span>
+  </summary>
+  <div class="hub-accordion__body">
+    <ul class="hub-accordion__list">
+      <li>Multilingual Embedding</li>
+      <li>Long-context / Contextual Embedding</li>
+      <li>Training Paradigms</li>
+      <li>Evaluation & Benchmarks</li>
+      <li>Domain-specific Embedding</li>
+    </ul>
+  </div>
+</details>
 
 如果你想先建立整体地图，回到 [Overview](/overview/)；如果想直接拿材料开始读，去 [Resources](/resources/)。

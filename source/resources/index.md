@@ -9,6 +9,72 @@ description: 资料库入口
 这页不按时间倒序。  
 它只做一件事：把真正值得反复回看的入口资源集中在一起。
 
+<div id="book-series"></div>
+
+## Book Series
+
+<details id="representation-learning-book-series" class="hub-accordion">
+  <summary>
+    <strong>Principles and Practice of Deep Representation Learning</strong>
+    <span class="hub-accordion__meta">Buchanan 等 · 章节 PDF 索引</span>
+  </summary>
+  <div class="hub-accordion__body">
+    <p>这是我正在更新的读书笔记系列入口，章节 PDF 已按顶层结构拆分。</p>
+    <ul class="hub-accordion__list">
+      <li><a href="/books/deep-representation-learning/">系列入口页</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/00-preface.pdf">00. Preface</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/01-preface-to-version-2-0.pdf">01. Preface to Version 2.0</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/02-declaration-of-open-source.pdf">02. Declaration of Open Source</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/03-acknowledgment.pdf">03. Acknowledgment</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/04-notation.pdf">04. Notation</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/05-an-informal-introduction-to-intelligence.pdf">05. An Informal Introduction to Intelligence</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/06-learning-linear-and-independent-structures.pdf">06. Learning Linear and Independent Structures</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/07-pursuing-low-dimensional-distributions-via-denoising.pdf">07. Pursuing Low-Dimensional Distributions via Denoising</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/08-representation-learning-via-lossy-compression.pdf">08. Representation Learning via Lossy Compression</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/09-deep-representations-as-unrolled-optimization.pdf">09. Deep Representations as Unrolled Optimization</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/10-consistent-and-self-consistent-representations.pdf">10. Consistent and Self-Consistent Representations</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/11-inference-with-low-dimensional-distributions.pdf">11. Inference with Low-Dimensional Distributions</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/12-learning-representations-for-real-world-data-and-tasks.pdf">12. Learning Representations for Real-World Data and Tasks</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/13-open-problems-and-directions-about-intelligence.pdf">13. Open Problems and Directions about Intelligence</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/14-appendices.pdf">14. Appendices</a></li>
+    </ul>
+  </div>
+</details>
+
+<details id="deep-learning-book-series" class="hub-accordion">
+  <summary>
+    <strong>Deep Learning</strong>
+    <span class="hub-accordion__meta">Goodfellow / Bengio / Courville · 官方 HTML 章节入口</span>
+  </summary>
+  <div class="hub-accordion__body">
+    <p>官方在线版可免费阅读，但官方 FAQ 明确说明不提供 PDF，因此这里采用章节网页链接方案。</p>
+    <ul class="hub-accordion__list">
+      <li><a href="/books/deep-learning/">系列入口页</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/TOC.html" target="_blank" rel="noopener">Table of Contents</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/intro.html" target="_blank" rel="noopener">1. Introduction</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/linear_algebra.html" target="_blank" rel="noopener">2. Linear Algebra</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/prob.html" target="_blank" rel="noopener">3. Probability and Information Theory</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/numerical.html" target="_blank" rel="noopener">4. Numerical Computation</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/ml.html" target="_blank" rel="noopener">5. Machine Learning Basics</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/mlp.html" target="_blank" rel="noopener">6. Deep Feedforward Networks</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/regularization.html" target="_blank" rel="noopener">7. Regularization for Deep Learning</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/optimization.html" target="_blank" rel="noopener">8. Optimization for Training Deep Models</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/convnets.html" target="_blank" rel="noopener">9. Convolutional Networks</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/rnn.html" target="_blank" rel="noopener">10. Sequence Modeling: Recurrent and Recursive Nets</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/guidelines.html" target="_blank" rel="noopener">11. Practical Methodology</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/applications.html" target="_blank" rel="noopener">12. Applications</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/linear_factors.html" target="_blank" rel="noopener">13. Linear Factor Models</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/autoencoders.html" target="_blank" rel="noopener">14. Autoencoders</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/representation.html" target="_blank" rel="noopener">15. Representation Learning</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/graphical_models.html" target="_blank" rel="noopener">16. Structured Probabilistic Models for Deep Learning</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/monte_carlo.html" target="_blank" rel="noopener">17. Monte Carlo Methods</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/partition.html" target="_blank" rel="noopener">18. Confronting the Partition Function</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/inference.html" target="_blank" rel="noopener">19. Approximate Inference</a></li>
+      <li><a href="https://www.deeplearningbook.org/contents/generative_models.html" target="_blank" rel="noopener">20. Deep Generative Models</a></li>
+    </ul>
+  </div>
+</details>
+
 ## Surveys and Foundations
 
 <div class="resource-list">
@@ -78,8 +144,16 @@ description: 资料库入口
   </article>
 </div>
 
-## 如何使用这页
-
-- 想快速入门：先看 Sentence-BERT、DPR、MTEB。
-- 想理解检索系统结构：继续看 ColBERT、BEIR、MAR。
-- 想关注更实用的统一 embedding：再看 E5 以及后续效率问题。
+<details class="hub-accordion">
+  <summary>
+    <strong>如何使用这页</strong>
+    <span class="hub-accordion__meta">阅读顺序建议</span>
+  </summary>
+  <div class="hub-accordion__body">
+    <ul class="hub-accordion__list">
+      <li>想快速入门：先看 Sentence-BERT、DPR、MTEB。</li>
+      <li>想理解检索系统结构：继续看 ColBERT、BEIR、MAR。</li>
+      <li>想关注更实用的统一 embedding：再看 E5 以及后续效率问题。</li>
+    </ul>
+  </div>
+</details>

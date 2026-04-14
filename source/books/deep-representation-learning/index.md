@@ -13,26 +13,42 @@ description: 读书笔记系列入口
 由于整本 PDF 超过 GitHub 单文件 100 MB 限制，现在已经按顶层章节拆分。  
 后续每章笔记都可以直接链接到对应章节 PDF。
 
-### Front Matter
+<details class="hub-accordion">
+  <summary>
+    <strong>Front Matter</strong>
+    <span class="hub-accordion__meta">00-04 · 序言与记号</span>
+  </summary>
+  <div class="hub-accordion__body">
+    <ul class="hub-accordion__list">
+      <li><a href="/uploads/books/deep-representation-learning/00-preface.pdf">00. Preface</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/01-preface-to-version-2-0.pdf">01. Preface to Version 2.0</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/02-declaration-of-open-source.pdf">02. Declaration of Open Source</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/03-acknowledgment.pdf">03. Acknowledgment</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/04-notation.pdf">04. Notation</a></li>
+    </ul>
+  </div>
+</details>
 
-- [00. Preface](/uploads/books/deep-representation-learning/00-preface.pdf)
-- [01. Preface to Version 2.0](/uploads/books/deep-representation-learning/01-preface-to-version-2-0.pdf)
-- [02. Declaration of Open Source](/uploads/books/deep-representation-learning/02-declaration-of-open-source.pdf)
-- [03. Acknowledgment](/uploads/books/deep-representation-learning/03-acknowledgment.pdf)
-- [04. Notation](/uploads/books/deep-representation-learning/04-notation.pdf)
-
-### Main Chapters
-
-- [05. An Informal Introduction to Intelligence](/uploads/books/deep-representation-learning/05-an-informal-introduction-to-intelligence.pdf)
-- [06. Learning Linear and Independent Structures](/uploads/books/deep-representation-learning/06-learning-linear-and-independent-structures.pdf)
-- [07. Pursuing Low-Dimensional Distributions via Denoising](/uploads/books/deep-representation-learning/07-pursuing-low-dimensional-distributions-via-denoising.pdf)
-- [08. Representation Learning via Lossy Compression](/uploads/books/deep-representation-learning/08-representation-learning-via-lossy-compression.pdf)
-- [09. Deep Representations as Unrolled Optimization](/uploads/books/deep-representation-learning/09-deep-representations-as-unrolled-optimization.pdf)
-- [10. Consistent and Self-Consistent Representations](/uploads/books/deep-representation-learning/10-consistent-and-self-consistent-representations.pdf)
-- [11. Inference with Low-Dimensional Distributions](/uploads/books/deep-representation-learning/11-inference-with-low-dimensional-distributions.pdf)
-- [12. Learning Representations for Real-World Data and Tasks](/uploads/books/deep-representation-learning/12-learning-representations-for-real-world-data-and-tasks.pdf)
-- [13. Open Problems and Directions about Intelligence](/uploads/books/deep-representation-learning/13-open-problems-and-directions-about-intelligence.pdf)
-- [14. Appendices](/uploads/books/deep-representation-learning/14-appendices.pdf)
+<details class="hub-accordion">
+  <summary>
+    <strong>Main Chapters</strong>
+    <span class="hub-accordion__meta">05-14 · 正文章节</span>
+  </summary>
+  <div class="hub-accordion__body">
+    <ul class="hub-accordion__list">
+      <li><a href="/uploads/books/deep-representation-learning/05-an-informal-introduction-to-intelligence.pdf">05. An Informal Introduction to Intelligence</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/06-learning-linear-and-independent-structures.pdf">06. Learning Linear and Independent Structures</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/07-pursuing-low-dimensional-distributions-via-denoising.pdf">07. Pursuing Low-Dimensional Distributions via Denoising</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/08-representation-learning-via-lossy-compression.pdf">08. Representation Learning via Lossy Compression</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/09-deep-representations-as-unrolled-optimization.pdf">09. Deep Representations as Unrolled Optimization</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/10-consistent-and-self-consistent-representations.pdf">10. Consistent and Self-Consistent Representations</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/11-inference-with-low-dimensional-distributions.pdf">11. Inference with Low-Dimensional Distributions</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/12-learning-representations-for-real-world-data-and-tasks.pdf">12. Learning Representations for Real-World Data and Tasks</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/13-open-problems-and-directions-about-intelligence.pdf">13. Open Problems and Directions about Intelligence</a></li>
+      <li><a href="/uploads/books/deep-representation-learning/14-appendices.pdf">14. Appendices</a></li>
+    </ul>
+  </div>
+</details>
 
 ## 使用方式
 
@@ -46,7 +62,7 @@ description: 读书笔记系列入口
 如果要新建一篇章节笔记，可以直接使用这个模板：
 
 ```bash
-hexo new book-note "Chapter 1 读书笔记"
+hexo new deep-representation-learning-book-note "Chapter 1 读书笔记"
 ```
 
 模板会自动包含原书 PDF 链接和基础结构。

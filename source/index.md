@@ -15,6 +15,7 @@ description: Embedding Research Hub 首页
     <div class="home-actions">
       <a class="button is-primary is-rounded" href="/overview/">Start with Overview</a>
       <a class="button is-light is-rounded" href="/topics/">Browse Topics</a>
+      <a class="button is-light is-rounded" href="/resources/#book-series">Open Book Series</a>
       <a class="button is-light is-rounded" href="/notes/">Open Notes Stream</a>
     </div>
   </section>
@@ -107,6 +108,10 @@ description: Embedding Research Hub 首页
       <a class="hub-card hub-card--link" href="/resources/">
         <h3>Starter Resources</h3>
         <p>挑出最适合入门的几篇综述、benchmark 和代表性工作。</p>
+      </a>
+      <a class="hub-card hub-card--link" href="/resources/#book-series">
+        <h3>Book Series</h3>
+        <p>进入读书笔记系列入口，按书籍展开章节原文或对应 PDF。</p>
       </a>
       <a class="hub-card hub-card--link" href="/2025/10/26/Notes/MAR_Note/">
         <h3>MAR Reading Note</h3>
